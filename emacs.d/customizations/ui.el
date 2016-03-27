@@ -26,7 +26,11 @@
 ;; for a more technical explanation.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
-(load-theme 'tomorrow-night-bright t)
+(load-theme 'moe-dark t)
+;;(load-theme 'cyberpunk t)
+;;(load-theme 'solarized t)
+;;(load-theme 'zenburn t)
+;;(load-theme 'tomorrow-night-bright t)
 
 ;; increase font size for better readability
 (set-face-attribute 'default nil :height 140)

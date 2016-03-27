@@ -4,17 +4,20 @@
 
 ;; Define package repositories
 (require 'package)
+
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
              '("tromey" . "http://tromey.com/elpa/") t)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 
-;; (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-;;                          ("marmalade" . "http://marmalade-repo.org/packages/")
-;;                          ("melpa" . "http://melpa-stable.milkbox.net/packages/")))
+;;(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+;;                         ("marmalade" . "http://marmalade-repo.org/packages/")
+;;                         ("melpa" . "http://melpa.org/packages/")))
 
+;; keep the installed packages in .emacs.d
+;;(setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 
 ;; Load and activate emacs packages. Do this first so that the
 ;; packages are loaded before you start trying to modify them.
@@ -25,6 +28,10 @@
 ;; This informs Emacs about the latest versions of all packages, and
 ;; makes them available for download.
 (when (not package-archive-contents)
+  (package-refresh-contents))
+
+;; update the package metadata if the local cache is missing
+(unless package-archive-contents
   (package-refresh-contents))
 
 ;; The packages you want installed. You can also install these
@@ -68,6 +75,7 @@
     ;; git integration
     magit))
 
+
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
 ;; terminal window, because OS X does not run a shell during the
@@ -84,6 +92,9 @@
     (package-install p)))
 
 
+;; smart tab behavior - indent or complete
+(setq tab-always-indent 'complete)
+
 ;; Place downloaded elisp files in ~/.emacs.d/vendor. You'll then be able
 ;; to load them.
 ;;
@@ -95,8 +106,126 @@
 ;; 
 ;; Adding this code will make Emacs enter yaml mode whenever you open
 ;; a .yml file
-(add-to-list 'load-path "~/.emacs.d/vendor")
 
+
+(setq user-full-name "Sho Asod"
+      user-mail-address "sho.asod@gmail.com")
+
+;; Always load newest byte code
+(setq load-prefer-newer t)
+
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
+
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
+
+(defconst sho-savefile-dir (expand-file-name "savefile" user-emacs-directory))
+
+;; create the savefile dir if it doesn't exist
+(unless (file-exists-p sho-savefile-dir)
+  (make-directory sho-savefile-dir))
+
+;; the toolbar is just a waste of valuable screen estate
+;; in a tty tool-bar-mode does not properly auto-load, and is
+;; already disabled anyway
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+
+
+;; the blinking cursor is nothing, but an annoyance
+(blink-cursor-mode -1)
+
+;; disable the annoying bell ring
+(setq ring-bell-function 'ignore)
+
+;; disable startup screen
+(setq inhibit-startup-screen t)
+
+;; nice scrolling
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+
+
+;; mode line settings
+(line-number-mode t)
+(column-number-mode t)
+(size-indication-mode t)
+
+;; enable y/n answers
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; more useful frame title, that show either a file or a
+;; buffer name (if the buffer isn't visiting a file)
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+
+
+;; Emacs modes typically provide a standard means to change the
+;; indentation width -- eg. c-basic-offset: use that to adjust your
+;; personal indentation width, while maintaining the style (and
+;; meaning) of any files you load.
+(setq-default indent-tabs-mode nil)   ;; don't use tabs to indent
+(setq-default tab-width 8)            ;; but maintain correct appearance
+
+;; Newline at end of file
+(setq require-final-newline t)
+
+;; delete the selection with a keypress
+(delete-selection-mode t)
+
+
+;; store all backup and autosave files in the tmp dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+;; revert buffers automatically when underlying files are changed externally
+(global-auto-revert-mode t)
+
+
+;; revert buffers automatically when underlying files are changed externally
+(global-auto-revert-mode t)
+
+;; hippie expand is dabbrev expand on steroids
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-dabbrev-from-kill
+                                         try-complete-file-name-partially
+                                         try-complete-file-name
+                                         try-expand-all-abbrevs
+                                         try-expand-list
+                                         try-expand-line
+                                         try-complete-lisp-symbol-partially
+                                         try-complete-lisp-symbol))
+
+;; use hippie-expand instead of dabbrev
+(global-set-key (kbd "M-/") #'hippie-expand)
+(global-set-key (kbd "s-/") #'hippie-expand)
+
+;; replace buffer-menu with ibuffer
+(global-set-key (kbd "C-x C-b") #'ibuffer)
+
+
+;; align code in a pretty way
+(global-set-key (kbd "C-x \\") #'align-regexp)
+
+;; extend the help commands
+;;(define-key 'help-command (kbd "C-f") #'find-function)
+;;(define-key 'help-command (kbd "C-k") #'find-function-on-key)
+;;(define-key 'help-command (kbd "C-v") #'find-variable)
+;;(define-key 'help-command (kbd "C-l") #'find-library)
+;;(define-key 'help-command (kbd "C-i") #'info-display-manual)
+
+
+(let ((default-directory "~/.emacs.d/vendor/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;;;;
 ;; Customization
@@ -121,28 +250,49 @@
 ;; These customizations make editing a bit nicer.
 (load "editing.el")
 
-;; Hard-to-categorize customizations
-(load "misc.el")
-
 ;; For editing lisps
 (load "elisp-editing.el")
 
 ;; Langauage-specific
 (load "setup-clojure.el")
 (load "setup-js.el")
+
+
+;;load emacs for python http://gabrielelanaro.github.io/emacs-for-python/
+;;(load-file "~/.emacs.d/vendor/emacs-for-python/epy-init.el")
+
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+;;(load-theme 'moe-dark t)
+;;(load-theme 'cyberpunk t)
+;;(load-theme 'solarized t)
+;;(load-theme 'zenburn t)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(coffee-tab-width 2)
- '(custom-enabled-themes (quote (tomorrow-night-bright)))
- '(custom-safe-themes
-   (quote
-    ("5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" "9e54a6ac0051987b4296e9276eecc5dfb67fdcd620191ee553f40a9b6d943e78" "52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" default))))
+ '(inhibit-startup-screen t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+;;add markdown support
+;;(autoload 'markdown-mode "markdown-mode"
+;;   "Major mode for editing Markdown files" t)
+;;(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+;;(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+;;(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(custom-set-variables
+ '(markdown-command "/usr/local/bin/pandoc"))
+
+
+;;activate org-mode
+(require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)

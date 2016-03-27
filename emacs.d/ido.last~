@@ -1,0 +1,31 @@
+;;; -*- coding: utf-8 -*-
+
+;; ----- ido-last-directory-list -----
+(
+ ("/Users/Sho/dotfiles/" . "emacs.d/")
+ ("/Users/Sho/" . "dotfiles/")
+)
+
+;; ----- ido-work-directory-list -----
+(
+ "/Users/Sho/dotfiles/emacs.d/"
+)
+
+;; ----- ido-work-file-list -----
+(
+ "init.el"
+)
+
+;; ----- ido-dir-file-cache -----
+(
+ ("/Users/" (22111 37924 0 0) "Sho/" "Shared/" "Guest/" ".localized" "../" "./")
+
+ ("/Users/Sho/" (22259 1039 0 0) "Public/" "Pictures/" "Music/" "mqttfx.log" "Movies/" "Library/" "dse/" "Downloads/" "dotfiles_old/" "dotfiles/" "Documents/" "dev/" "Desktop/" "Applications/" ".Trash/" ".swt/" ".subversion/" ".ssh/" ".sincedb_0a2216812ec49c5a2a45c028e5e03665" ".python_history" ".oracle_jre_usage/" ".npm/" ".node-red/" ".lldb/" ".kafkatcfg" ".jenv/" ".heroku/" ".gradle/" ".gem/" ".emacs.d/" ".DS_Store" ".docker/" ".dbeaver/" ".continuum/" ".config/" ".conda/" ".CloudStation/" ".CFUserTextEncoding" ".cassandra/" ".bash_sessions/" ".bash_profile" ".bash_history" ".android/" "../" "./")
+
+ ("/Users/Sho/dotfiles/" (22259 18808 0 0) "makesymlinks.sh" "emacs.d/" "docker/" ".gitmodules" ".git/" ".DS_Store" "../" "./")
+
+ ("/Users/Sho/dotfiles/emacs.d/" (22260 42101 0 0) "vendor/" "themes/" "savefile/" "init.el~" "init.el" "eproject.lst" "elpa/" "customizations/" "auto-save-list/" "ac-comphist.dat" ".emacs.d/" ".DS_Store" "../" "./")
+)
+
+;; ----- ido-unc-hosts-cache -----
+t
